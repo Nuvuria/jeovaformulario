@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agendar Instalação JEOLINK</title>
+    <style>
+      :root { color-scheme: light dark; }
+      * { box-sizing: border-box; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background: #0f172a url('public/fundo.jpeg') center/cover no-repeat fixed; color: #e2e8f0; }
+      .container { max-width: 640px; margin: 40px auto; padding: 24px; background: #111827; border: 1px solid #1f2937; border-radius: 12px; }
+      h1 { font-size: 1.5rem; margin: 0 0 16px; color: #f8fafc; }
+      p.desc { margin: 0 0 24px; color: #94a3b8; }
+      form { display: grid; gap: 16px; }
+      label { display: block; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+      input, select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0b1220; color: #e2e8f0; }
+      input::placeholder { color: #64748b; }
+      button { cursor: pointer; font-weight: 700; background: #10b981; border-color: transparent; color: #052e2b; }
+      button:hover { filter: brightness(1.05); }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+      .hero { display: none; }
+      @media (max-width: 640px) {
+        body { background: #0f172a; }
+        .hero { display: block; width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 16px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Agendar Instalação</h1>
+      <p class="desc">Preencha os dados abaixo para enviar sua solicitação pelo WhatsApp.</p>
+      <img class="hero" src="public/fundo.jpeg" alt="">
+      <form id="agendarForm">
+        <div>
+          <label for="nomeCompleto">Nome completo</label>
+          <input id="nomeCompleto" name="nomeCompleto" type="text" placeholder="Seu nome" required>
+        </div>
+        <div>
+          <label for="endereco">Endereço</label>
+          <input id="endereco" name="endereco" type="text" placeholder="Rua, número, bairro, cidade" required>
+        </div>
+        <div class="row">
+          <div>
+            <label for="plano">Plano</label>
+            <select id="plano" name="plano" required>
+              <option value="" disabled selected>Selecione um plano</option>
+              <option>Básico 100 Mbps</option>
+              <option>Intermediário 200 Mbps</option>
+              <option>Avançado 500 Mbps</option>
+            </select>
+          </div>
+          <div>
+            <label for="dataVencimento">Dia do vencimento</label>
+            <input id="dataVencimento" name="dataVencimento" type="number" min="1" max="31" step="1" placeholder="1 a 31" required>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="modemProprio">Tem modem próprio</label>
+            <select id="modemProprio" name="modemProprio" required>
+              <option value="" disabled selected>Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
+          </div>
+          <div>
+            <label for="diaInstalacao">Dia da instalação</label>
+            <input id="diaInstalacao" name="diaInstalacao" type="date" required>
+          </div>
+        </div>
+        <button type="submit">Agendar</button>
+      </form>
+    </main>
+    <script>
+      function formatDateBR(value) {
+        if (!value) return "";
+        const [y, m, d] = value.split("-");
+        if (!y || !m || !d) return value;
+        return `${d}/${m}/${y}`;
+      }
+      document.getElementById("agendarForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const nome = document.getElementById("nomeCompleto").value.trim();
+        const endereco = document.getElementById("endereco").value.trim();
+        const plano = document.getElementById("plano").value;
+        const vencimento = document.getElementById("dataVencimento").value.trim();
+        const modem = document.getElementById("modemProprio").value;
+        const instalacao = formatDateBR(document.getElementById("diaInstalacao").value);
+        const base = "Olá, quero solicitar instalação de internet";
+        const mensagem = `${base}\nNome completo: ${nome}\nEndereço: ${endereco}\nPlano: ${plano}\nDia do vencimento: ${vencimento}\nTem modem próprio: ${modem}\nDia da instalação: ${instalacao}`;
+        const url = `https://wa.me/558188924256?text=${encodeURIComponent(mensagem)}`;
+        window.open(url, "_blank");
+      });
+    </script>
+  </body>
+</html>
