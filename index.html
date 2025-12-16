@@ -24,6 +24,8 @@
         body { background: #0f172a; }
         .hero { display: block; width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 16px; }
       }
+      h6 { margin: 4px 0 0; color: #94a3b8; font-weight: 400; font-size: 0.8rem; }
+      #nomeCompleto { text-transform: uppercase; }
     </style>
   </head>
   <body>
@@ -36,6 +38,16 @@
           <label for="nomeCompleto">Nome completo</label>
           <input id="nomeCompleto" name="nomeCompleto" type="text" placeholder="Seu nome" required>
         </div>
+        <div class="row">
+          <div>
+            <label for="cpf">CPF</label>
+            <input id="cpf" name="cpf" type="text" placeholder="000.000.000-00" required>
+          </div>
+          <div>
+            <label for="numeroTelefone">Telefone</label>
+            <input id="numeroTelefone" name="numeroTelefone" type="tel" placeholder="(00) 00000-0000" required>
+          </div>
+        </div>
         <div>
           <label for="endereco">Endereço</label>
           <input id="endereco" name="endereco" type="text" placeholder="Rua, número, bairro, cidade" required>
@@ -45,30 +57,18 @@
             <label for="plano">Plano</label>
             <select id="plano" name="plano" required>
               <option value="" disabled selected>Selecione um plano</option>
-              <option>Básico 100 Mbps</option>
-              <option>Intermediário 200 Mbps</option>
-              <option>Avançado 500 Mbps</option>
+              
+              <option>200 MEGA </option>
+             
             </select>
           </div>
           <div>
             <label for="dataVencimento">Dia do vencimento</label>
             <input id="dataVencimento" name="dataVencimento" type="number" min="1" max="31" step="1" placeholder="1 a 31" required>
+            <h6>O dia da instalação só pode ser agendado no dia do seu vencimento.</h6>
           </div>
         </div>
-        <div class="row">
-          <div>
-            <label for="modemProprio">Tem modem próprio</label>
-            <select id="modemProprio" name="modemProprio" required>
-              <option value="" disabled selected>Selecione</option>
-              <option>Sim</option>
-              <option>Não</option>
-            </select>
-          </div>
-          <div>
-            <label for="diaInstalacao">Dia da instalação</label>
-            <input id="diaInstalacao" name="diaInstalacao" type="date" required>
-          </div>
-        </div>
+        <input type="hidden" id="status" name="status" value="Pendente">
         <button type="submit">Agendar</button>
       </form>
     </main>
@@ -81,16 +81,23 @@
       }
       document.getElementById("agendarForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        const nome = document.getElementById("nomeCompleto").value.trim();
-        const endereco = document.getElementById("endereco").value.trim();
-        const plano = document.getElementById("plano").value;
-        const vencimento = document.getElementById("dataVencimento").value.trim();
-        const modem = document.getElementById("modemProprio").value;
-        const instalacao = formatDateBR(document.getElementById("diaInstalacao").value);
-        const base = "Olá, quero solicitar instalação de internet";
-        const mensagem = `${base}\nNome completo: ${nome}\nEndereço: ${endereco}\nPlano: ${plano}\nDia do vencimento: ${vencimento}\nTem modem próprio: ${modem}\nDia da instalação: ${instalacao}`;
-        const url = `https://wa.me/558188924256?text=${encodeURIComponent(mensagem)}`;
-        window.open(url, "_blank");
+        try {
+          const nome = document.getElementById("nomeCompleto").value.trim().toUpperCase();
+          const cpf = document.getElementById("cpf").value.replace(/\D/g, "");
+          const telefone = document.getElementById("numeroTelefone").value.trim();
+          const endereco = document.getElementById("endereco").value.trim();
+          const plano = document.getElementById("plano").value;
+          const vencimento = document.getElementById("dataVencimento").value.trim();
+          const status = document.getElementById("status").value;
+          
+          const base = "Olá, quero solicitar instalação de internet";
+          const mensagem = `${base}\nNome completo: ${nome}\nCPF: ${cpf}\nTelefone: ${telefone}\nEndereço: ${endereco}\nPlano: ${plano}\nDia do vencimento: ${vencimento}\nStatus: ${status}`;
+          const url = `https://wa.me/558186202832?text=${encodeURIComponent(mensagem)}`;
+          window.open(url, "_blank");
+        } catch (err) {
+          console.error("Erro ao enviar formulário:", err);
+          alert("Ocorreu um erro ao processar os dados. Verifique se todos os campos estão preenchidos corretamente.");
+        }
       });
     </script>
   </body>
